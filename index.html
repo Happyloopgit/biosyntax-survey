@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biosyntax Customer Interview</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+        h1 { color: #2d3748; margin-bottom: 10px; font-size: 28px; }
+        .subtitle { color: #718096; margin-bottom: 30px; }
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .section:last-child { border-bottom: none; }
+        .section-title {
+            color: #667eea;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .section-number {
+            background: #667eea;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 14px;
+        }
+        .form-group { margin-bottom: 20px; }
+        .question-number {
+            color: #667eea;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        label {
+            display: block;
+            color: #2d3748;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .required { color: #e53e3e; }
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .radio-option, .checkbox-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .radio-option:hover, .checkbox-option:hover {
+            border-color: #667eea;
+            background: #f7fafc;
+        }
+        .radio-option input, .checkbox-option input {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .task-row {
+            display: grid;
+            grid-template-columns: 1fr 150px;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .problem-input { margin-bottom: 12px; }
+        .conditional-field {
+            display: none;
+            margin-top: 12px;
+            padding: 12px;
+            background: #f7fafc;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .success-message {
+            display: none;
+            background: #48bb78;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .error-message {
+            display: none;
+            background: #f56565;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .help-text {
+            font-size: 13px;
+            color: #718096;
+            margin-top: 4px;
+        }
+        @media (max-width: 640px) {
+            .container { padding: 20px; }
+            h1 { font-size: 24px; }
+            .task-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Biosyntax Customer Interview</h1>
+        <p class="subtitle">Help us build the right AI training for biotech professionals (5-10 minutes)</p>
+        
+        <div id="successMessage" class="success-message">
+            ✓ Thank you! Your response has been recorded successfully.
+        </div>
+        
+        <div id="errorMessage" class="error-message"></div>
+        
+        <form id="interviewForm">
+            <!-- Interviewer Selection -->
+            <div class="section">
+                <div class="form-group">
+                    <label><span class="question-number">0.</span> Interviewer Name <span class="required">*</span></label>
+                    <select name="interviewer" required>
+                        <option value="">Select interviewer...</option>
+                        <option value="Bhargav">Bhargav</option>
+                        <option value="Manoj">Manoj</option>
+                        <option value="Sudarshan">Sudarshan</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Section A: Basic Information -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-number">A</span>
+                    Basic Information
+                </h2>
+                
+                <div class="form-group">
+                    <label><span class="question-number">1.</span> Your Name <span class="required">*</span></label>
+                    <input type="text" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">2.</span> Email <span class="required">*</span></label>
+                    <input type="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">3.</span> Company/Organization</label>
+                    <input type="text" name="company">
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">4.</span> Job Title <span class="required">*</span></label>
+                    <input type="text" name="jobTitle" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">5.</span> Years of Experience <span class="required">*</span></label>
+                    <select name="experience" required>
+                        <option value="">Select...</option>
+                        <option value="0-1">Student (0-1 years)</option>
+                        <option value="1-5">Early career (1-5 years)</option>
+                        <option value="5-10">Mid career (5-10 years)</option>
+                        <option value="10-15">Senior (10-15 years)</option>
+                        <option value="15+">Very senior (15+ years)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">6.</span> Primary Function <span class="required">*</span></label>
+                    <select name="primaryFunction" id="primaryFunction" required>
+                        <option value="">Select...</option>
+                        <option value="Drug Discovery">Drug Discovery / R&D</option>
+                        <option value="Clinical">Clinical Trials / Clinical Operations</option>
+                        <option value="Quality">Quality Assurance / Quality Control</option>
+                        <option value="Regulatory">Regulatory Affairs</option>
+                        <option value="Manufacturing">Manufacturing / Process Development</option>
+                        <option value="Bioinformatics">Bioinformatics / Computational Biology</option>
+                        <option value="Medical Affairs">Medical Affairs</option>
+                        <option value="Business">Business Development / Strategy</option>
+                        <option value="Academic">Academic Research</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <div id="otherFunctionField" class="conditional-field">
+                        <label>Please specify your function:</label>
+                        <input type="text" name="otherFunction" placeholder="e.g., Pharmacovigilance">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">7.</span> Location (City)</label>
+                    <input type="text" name="location" placeholder="e.g., Hyderabad, Bangalore">
+                </div>
+            </div>
+            
+            <!-- Section B: Time & Tasks -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-number">B</span>
+                    Time & Tasks
+                </h2>
+                
+                <div class="form-group">
+                    <label><span class="question-number">8.</span> List your main tasks and hours per week:</label>
+                    <div class="task-row">
+                        <input type="text" name="task1" placeholder="Task 1 (e.g., Literature review)">
+                        <input type="number" name="task1Hours" placeholder="Hours/week" min="0">
+                    </div>
+                    <div class="task-row">
+                        <input type="text" name="task2" placeholder="Task 2">
+                        <input type="number" name="task2Hours" placeholder="Hours/week" min="0">
+                    </div>
+                    <div class="task-row">
+                        <input type="text" name="task3" placeholder="Task 3">
+                        <input type="number" name="task3Hours" placeholder="Hours/week" min="0">
+                    </div>
+                    <div class="task-row">
+                        <input type="text" name="task4" placeholder="Task 4">
+                        <input type="number" name="task4Hours" placeholder="Hours/week" min="0">
+                    </div>
+                    <div class="task-row">
+                        <input type="text" name="task5" placeholder="Task 5">
+                        <input type="number" name="task5Hours" placeholder="Hours/week" min="0">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">9.</span> Which task is MOST frustrating?</label>
+                    <select name="mostFrustrating">
+                        <option value="">Select...</option>
+                        <option value="Task 1">Task 1</option>
+                        <option value="Task 2">Task 2</option>
+                        <option value="Task 3">Task 3</option>
+                        <option value="Task 4">Task 4</option>
+                        <option value="Task 5">Task 5</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">10.</span> Why is this frustrating? (Check all that apply)</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="frustratingReasons" value="Takes too much time">
+                            Takes too much time
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="frustratingReasons" value="Repetitive/boring">
+                            Repetitive / boring
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="frustratingReasons" value="Hard to do well">
+                            Hard to do well
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="frustratingReasons" value="Requires multiple tools">
+                            Requires multiple tools
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="frustratingReasons" value="Keeps changing">
+                            Keeps changing
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section C: AI Tool Usage -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-number">C</span>
+                    Current AI Usage
+                </h2>
+                
+                <div class="form-group">
+                    <label><span class="question-number">11.</span> Have you used ChatGPT, Claude, or similar AI chatbots? <span class="required">*</span></label>
+                    <select name="aiUsage" required>
+                        <option value="">Select...</option>
+                        <option value="Never">Never</option>
+                        <option value="Tried once or twice">Tried once or twice</option>
+                        <option value="Use occasionally">Use occasionally (few times a month)</option>
+                        <option value="Use regularly">Use regularly (few times a week)</option>
+                        <option value="Use daily">Use daily</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">12.</span> What did you use it for? (Check all that apply)</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="aiUsedFor" value="Writing emails/documents">
+                            Writing emails/documents
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="aiUsedFor" value="Summarizing papers">
+                            Summarizing papers/articles
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="aiUsedFor" value="Analyzing data">
+                            Analyzing data
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="aiUsedFor" value="Answering questions">
+                            Answering questions
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="aiUsedFor" value="Code/programming">
+                            Code/programming help
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="aiUsedFor" id="aiUsedForOther" value="Other">
+                            Other
+                        </label>
+                    </div>
+                    <div id="aiUsedForOtherField" class="conditional-field">
+                        <label>Please specify what else:</label>
+                        <input type="text" name="aiUsedForOtherText" placeholder="e.g., Generating ideas">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">13.</span> Did it work well for your work?</label>
+                    <select name="aiHelpful">
+                        <option value="">Select...</option>
+                        <option value="Very helpful">Yes, very helpful</option>
+                        <option value="Somewhat helpful">Somewhat helpful</option>
+                        <option value="Not helpful">Not really helpful</option>
+                        <option value="Didn't work">Didn't work at all</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">14.</span> Have you used specialized AI tools? (e.g., AlphaFold, Benchling AI)</label>
+                    <select name="specializedTools">
+                        <option value="">Select...</option>
+                        <option value="Never heard">Never heard of them</option>
+                        <option value="Heard but never used">Heard of them but never used</option>
+                        <option value="Tried">Tried once or twice</option>
+                        <option value="Occasionally">Use occasionally</option>
+                        <option value="Regularly">Use regularly</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Section D: Learning -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-number">D</span>
+                    Learning Preferences
+                </h2>
+                
+                <div class="form-group">
+                    <label><span class="question-number">15.</span> How much time per week can you spend learning?</label>
+                    <select name="learningTime">
+                        <option value="">Select...</option>
+                        <option value="<1 hour">Less than 1 hour</option>
+                        <option value="1-2 hours">1-2 hours</option>
+                        <option value="2-5 hours">2-5 hours</option>
+                        <option value="5-10 hours">5-10 hours</option>
+                        <option value="10+ hours">10+ hours</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">16.</span> When would you do this learning? (Check all)</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="learningWhen" value="During work hours">
+                            During work hours
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="learningWhen" value="Lunch breaks">
+                            Lunch breaks
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="learningWhen" value="Evenings">
+                            Evenings after work
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="learningWhen" value="Weekends">
+                            Weekends
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section E: Course Interest -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-number">E</span>
+                    AI Course Interest
+                </h2>
+                
+                <div class="form-group">
+                    <label><span class="question-number">17.</span> If AI could solve 3 work problems, which would you pick? <span class="required">*</span></label>
+                    <div class="problem-input">
+                        <span class="question-number">#1 Most Important:</span>
+                        <input type="text" name="problem1" required placeholder="e.g., Literature review takes 10 hrs/week">
+                    </div>
+                    <div class="problem-input">
+                        <span class="question-number">#2:</span>
+                        <input type="text" name="problem2" placeholder="Second priority">
+                    </div>
+                    <div class="problem-input">
+                        <span class="question-number">#3:</span>
+                        <input type="text" name="problem3" placeholder="Third priority">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">18.</span> For your #1 problem, what would success look like?</label>
+                    <select name="successMetric">
+                        <option value="">Select...</option>
+                        <option value="Save time">Save X hours per week</option>
+                        <option value="Improve quality">Improve quality of work</option>
+                        <option value="Learn new skill">Learn a new skill for career growth</option>
+                        <option value="Get promoted">Get promoted / change roles</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">19.</span> If saving time, how many hours per week?</label>
+                    <input type="number" name="hoursToSave" placeholder="e.g., 5" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">20.</span> Would you prefer:</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="preferredFormat" value="Bundle">
+                            A bundle of courses for my role (e.g., 5-6 courses)
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="preferredFormat" value="Individual">
+                            Individual courses I can pick one at a time
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="preferredFormat" value="Not sure">
+                            Not sure
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">21.</span> Does training need to be specific to your field?</label>
+                    <select name="specificityNeeded">
+                        <option value="">Select...</option>
+                        <option value="Must be specific">Must be specific to my field</option>
+                        <option value="General is fine">General biotech is fine</option>
+                        <option value="Doesn't matter">Doesn't matter, I can adapt</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Section F: Willingness to Pay -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-number">F</span>
+                    Pricing (CRITICAL)
+                </h2>
+                
+                <div class="form-group">
+                    <label><span class="question-number">22.</span> If this course solved your #1 problem, what would you pay? (in ₹ or $)</label>
+                    <input type="number" name="priceWillingness" placeholder="e.g., 15000 or 200" min="0">
+                    <p class="help-text">Be honest - this helps us price fairly</p>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">23.</span> Would you pay yourself or need company approval?</label>
+                    <select name="paymentSource">
+                        <option value="">Select...</option>
+                        <option value="Pay myself">Pay myself</option>
+                        <option value="Need approval">Need manager approval</option>
+                        <option value="Company pays">Company would pay</option>
+                        <option value="Not sure">Not sure</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">24.</span> Would you pay ₹10,000 ($120) for this course? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="at10k" value="Yes definitely" required>
+                            Yes, definitely
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="at10k" value="Probably yes">
+                            Probably yes
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="at10k" value="Maybe">
+                            Maybe / Need to think
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="at10k" value="Probably not">
+                            Probably not
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="at10k" value="Definitely not">
+                            Definitely not
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">25.</span> MOST IMPORTANT: If this launched in 60 days, would you prepay ₹10,000 TODAY? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="wouldPrepay" value="Yes, prepay today" required>
+                            ✅ Yes, I'd prepay today
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="wouldPrepay" value="Probably yes">
+                            Probably yes, but want details first
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="wouldPrepay" value="Maybe">
+                            Maybe
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="wouldPrepay" value="Probably not">
+                            Probably not
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="wouldPrepay" value="Definitely not">
+                            Definitely not
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section G: Additional Notes -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-number">G</span>
+                    Additional Comments
+                </h2>
+                
+                <div class="form-group">
+                    <label><span class="question-number">26.</span> Any other thoughts, concerns, or questions?</label>
+                    <textarea name="additionalComments" placeholder="Optional..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">27.</span> Can we email you when the course is ready?</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="emailUpdates" value="Yes">
+                            Yes, keep me updated
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="emailUpdates" value="No">
+                            No thanks
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><span class="question-number">28.</span> Interested in beta testing for free?</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="betaTester" value="Yes">
+                            Yes, I'd love to
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="betaTester" value="Maybe">
+                            Maybe
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="betaTester" value="No">
+                            No
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Submit Interview
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // REPLACE THIS WITH YOUR N8N WEBHOOK URL
+        const WEBHOOK_URL = 'https://your-n8n-instance.com/webhook/interview';
+        
+        // Show/hide conditional fields
+        document.getElementById('primaryFunction').addEventListener('change', function() {
+            document.getElementById('otherFunctionField').style.display = 
+                this.value === 'Other' ? 'block' : 'none';
+        });
+        
+        document.getElementById('aiUsedForOther').addEventListener('change', function() {
+            document.getElementById('aiUsedForOtherField').style.display = 
+                this.checked ? 'block' : 'none';
+        });
+        
+        // Form submission
+        document.getElementById('interviewForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            const formData = new FormData(e.target);
+            const data = {};
+            
+            for (let [key, value] of formData.entries()) {
+                if (key === 'frustratingReasons' || key === 'aiUsedFor' || key === 'learningWhen') {
+                    if (!data[key]) data[key] = [];
+                    data[key].push(value);
+                } else {
+                    data[key] = value;
+                }
+            }
+            
+            data.submittedAt = new Date().toISOString();
+            data.tasks = [
+                { description: data.task1 || '', hours: parseInt(data.task1Hours) || 0 },
+                { description: data.task2 || '', hours: parseInt(data.task2Hours) || 0 },
+                { description: data.task3 || '', hours: parseInt(data.task3Hours) || 0 },
+                { description: data.task4 || '', hours: parseInt(data.task4Hours) || 0 },
+                { description: data.task5 || '', hours: parseInt(data.task5Hours) || 0 }
+            ].filter(t => t.description);
+            
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    successMsg.style.display = 'block';
+                    errorMsg.style.display = 'none';
+                    e.target.reset();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    setTimeout(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Submit Interview';
+                    }, 3000);
+                } else {
+                    throw new Error('Server error');
+                }
+            } catch (error) {
+                errorMsg.textContent = '❌ Submission failed. Please try again.';
+                errorMsg.style.display = 'block';
+                successMsg.style.display = 'none';
+                localStorage.setItem(`interview_backup_${Date.now()}`, JSON.stringify(data));
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Interview';
+            }
+        });
+    </script>
+</body>
+</html>
